@@ -67,9 +67,10 @@ void delay (uint16_t time)
 
 uint32_t IC_Val1 = 0;
 uint32_t IC_Val2 = 0;
-uint32_t Difference = 0;
+float Difference = 0;
 uint8_t Is_First_Captured = 0;  // is the first value captured ?
-uint8_t Distance  = 0;
+float Distance  = 0;
+int count = 0;
 
 #define TRIG_PIN GPIO_PIN_9
 #define TRIG_PORT GPIOA
@@ -103,7 +104,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 				Difference = (0xffff - IC_Val1) + IC_Val2;
 			}
 
-			Distance = Difference * .034/2;
+			Distance = Difference * .034/2 * 10; //cm
 			Is_First_Captured = 0; // set it back to false
 
 			// set polarity to rising edge
@@ -168,7 +169,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+	  count = count+1;
 	  HCSR04_Read();
 	  HAL_Delay(200);
   }
