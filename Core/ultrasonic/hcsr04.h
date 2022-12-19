@@ -9,7 +9,9 @@
 
 void delay(uint16_t time);
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
-float HCSR04_Read(void);
+float HCSR04_Read1(void);
+float HCSR04_Read2(void);
 float HCSR04_Read3(void);
+float HCSR04_Read4(void);
 
 #endif /* HCSR04_H_ */

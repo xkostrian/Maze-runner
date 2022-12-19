@@ -24,7 +24,7 @@
 #include "hcsr04.h"
 
 int count = 0;
-float d, d3 = 0;
+float d1, d2, d3, d4 = 0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -92,11 +92,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM3_Init();
-  MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
 
   /* USER CODE END 2 */
 
@@ -108,8 +110,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  count = count+1;
-	  d = HCSR04_Read();
+	  d1 = HCSR04_Read1();
+	  d2 = HCSR04_Read2();
 	  d3 = HCSR04_Read3();
+	  d4 = HCSR04_Read4();
 	  HAL_Delay(200);
   }
   /* USER CODE END 3 */
@@ -123,7 +127,6 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -147,12 +150,6 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_TIM1;
-  PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLK_HCLK;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
