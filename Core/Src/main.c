@@ -116,10 +116,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	for(int i = 0; i < 4 ;i++){
-		PCR_right_arc(i);
-		HAL_Delay(5000);
-	}
+//	for(int i = 0; i < 4 ;i++){
+//		PCR_right_arc(i);
+//		HAL_Delay(5000);
+//	}
 	/*l = rand() % 101;
 	r = rand() % 101;
 	PCR_set_speeds(l, r);
