@@ -22,6 +22,9 @@
 #include "tim.h"
 #include "gpio.h"
 #include "hcsr04.h"
+#include "PCR_servo.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 int count = 0;
 float d1, d2, d3, d4 = 0;
@@ -69,6 +72,9 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+  // int randomnumber, l, r;
+
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -94,6 +100,9 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start(&htim3);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
@@ -101,13 +110,27 @@ int main(void)
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
 
   /* USER CODE END 2 */
-
+  //PCR_stand_still();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
+	for(int i = 0; i < 4 ;i++){
+		PCR_right_arc(i);
+		HAL_Delay(5000);
+	}
+	/*l = rand() % 101;
+	r = rand() % 101;
+	PCR_set_speeds(l, r);
+	HAL_Delay(1000);
+	PCR_go_forward();
+	HAL_Delay(500);
+	randomnumber = rand() % 4;
+	PCR_right_arc(randomnumber);
+	HAL_Delay(1000);
+	PCR_go_forward();
+	HAL_Delay(500);*/
     /* USER CODE BEGIN 3 */
 	  count = count+1;
 	  d1 = HCSR04_Read1();
