@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 int count = 0;
-float d1, d2, d3, d4 = 0;
+float d1, d2, d3, d4 = 100;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -113,31 +113,32 @@ int main(void)
   //PCR_stand_still();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  PCR_go_forward();
   while (1)
   {
-    /* USER CODE END WHILE */
-//	for(int i = 0; i < 4 ;i++){
-//		PCR_right_arc(i);
-//		HAL_Delay(5000);
-//	}
-	/*l = rand() % 101;
-	r = rand() % 101;
-	PCR_set_speeds(l, r);
-	HAL_Delay(1000);
-	PCR_go_forward();
-	HAL_Delay(500);
-	randomnumber = rand() % 4;
-	PCR_right_arc(randomnumber);
-	HAL_Delay(1000);
-	PCR_go_forward();
-	HAL_Delay(500);*/
-    /* USER CODE BEGIN 3 */
-	  count = count+1;
-	  d1 = HCSR04_Read1();
-	  d2 = HCSR04_Read2();
+//	  count = count+1;
+//	  HCSR04_Read1();
+//	  HAL_Delay(100);
+//	  HCSR04_Read2();
+//	  HAL_Delay(100);
+//	  HCSR04_Read3();
+//	  HAL_Delay(100);
+//	  HCSR04_Read4();
+//	  HAL_Delay(100);
+
 	  d3 = HCSR04_Read3();
-	  d4 = HCSR04_Read4();
-	  HAL_Delay(200);
+
+	  if (d3 <= 10){
+		  count += 1;
+	  }
+	  else {
+		  count = 0;
+	  }
+
+	  if (count >= 3){
+		  PCR_stand_still();
+	  }
+	  HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }

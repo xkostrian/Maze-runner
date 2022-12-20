@@ -139,7 +139,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 	}
 }
 
-float HCSR04_Read1(void)
+float HCSR04_Read1(void) //right
 {
 	HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);  // pull the TRIG pin HIGH
 	delay(10);  // wait for 10 us
@@ -150,7 +150,7 @@ float HCSR04_Read1(void)
 	return Distance1;
 }
 
-float HCSR04_Read2(void)
+float HCSR04_Read2(void) //back
 {
 	HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);  // pull the TRIG pin HIGH
 	delay(10);  // wait for 10 us
@@ -161,7 +161,7 @@ float HCSR04_Read2(void)
 	return Distance2;
 }
 
-float HCSR04_Read3(void)
+float HCSR04_Read3(void) //front
 {
 	HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);  // pull the TRIG pin HIGH
 	delay(10);  // wait for 10 us
@@ -172,7 +172,7 @@ float HCSR04_Read3(void)
 	return Distance3;
 }
 
-float HCSR04_Read4(void)
+float HCSR04_Read4(void) //left
 {
 	HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);  // pull the TRIG pin HIGH
 	delay(10);  // wait for 10 us
