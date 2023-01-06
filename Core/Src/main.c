@@ -29,6 +29,7 @@
 int k = 0, before = 0, state = 0;
 int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
 float d1, d2, d3, d4;
+int c = 0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -57,6 +58,7 @@ float d1, d2, d3, d4;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 int validate(int greater, int distance, float *sensor, int *current_status, int count);
+EDGE_TYPE edgeDetect(uint8_t pin_state, uint8_t samples);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -112,16 +114,32 @@ int main(void)
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
 
 
-  PCR_go_forward();
+//  PCR_go_forward();
   while (1)
   {
-	d3 = HCSR04_Read3();
-	if (validate(0, 30, &d3, &i3, 5) == 1){
-		PCR_stand_still();
-		k = 1;
-	}
-	HAL_Delay(100);
+	  if (edgeDetect(!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5), 3) == RISE) {
+		  if (state == 1) state = 0;
+	  	  else state = 1;
+	  	  }
+	      switch (state) {
+	      case 1:
+	    	  PCR_go_forward();
+	    	  break;
+	  	  case 0:
+	  		  PCR_stand_still();
+	  		  break;
+	  	  }
+	   before = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5);
 
+	   if (state == 1){
+		   d3 = HCSR04_Read3();
+		   if (validate(0, 30, &d3, &i3, 5) == 1){
+			   PCR_right_arc(1);
+			   HAL_Delay(3000);
+			   PCR_go_forward();
+		   }
+	   }
+	   HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -145,6 +163,24 @@ int validate(int greater, int distance, float *sensor, int *current_status, int 
 		//TODO
 	}
 	return 0;
+}
+
+EDGE_TYPE edgeDetect(uint8_t pin_state, uint8_t samples){
+	if (pin_state == 1 && before == 0 && k == 0){
+		k = k+1;
+	}
+	if (pin_state == 1 && before == 1){
+		 k = k+1;
+	}
+	if (k == samples){
+		return RISE;
+	}
+	if (pin_state == 0){
+		k = 0;
+		before = 0;
+		return NONE;
+	}
+	return NONE;
 }
 
 void SystemClock_Config(void)
