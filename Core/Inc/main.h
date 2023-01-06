@@ -60,6 +60,11 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
+typedef enum EDGE_TYPE {
+	NONE = 0,
+	RISE = 1,
+	FALL = 2
+} EDGE_TYPE;
 
 #ifdef __cplusplus
 }
