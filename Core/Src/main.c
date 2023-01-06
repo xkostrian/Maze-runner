@@ -26,8 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int count = 0;
-float d1, d2, d3, d4 = 100;
+int k = 0, before = 0, state = 0;
+int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
+float d1, d2, d3, d4;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -55,6 +56,7 @@ float d1, d2, d3, d4 = 100;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+int validate(int greater, int distance, float *sensor, int *current_status, int count);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -109,36 +111,17 @@ int main(void)
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
 
-  /* USER CODE END 2 */
-  //PCR_stand_still();
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+
   PCR_go_forward();
   while (1)
   {
-//	  count = count+1;
-//	  HCSR04_Read1();
-//	  HAL_Delay(100);
-//	  HCSR04_Read2();
-//	  HAL_Delay(100);
-//	  HCSR04_Read3();
-//	  HAL_Delay(100);
-//	  HCSR04_Read4();
-//	  HAL_Delay(100);
+	d3 = HCSR04_Read3();
+	if (validate(0, 30, &d3, &i3, 5) == 1){
+		PCR_stand_still();
+		k = 1;
+	}
+	HAL_Delay(100);
 
-	  d3 = HCSR04_Read3();
-
-	  if (d3 <= 10){
-		  count += 1;
-	  }
-	  else {
-		  count = 0;
-	  }
-
-	  if (count >= 3){
-		  PCR_stand_still();
-	  }
-	  HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -147,6 +130,23 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
+int validate(int greater, int distance, float *sensor, int *current_status, int count){ //greater=1, smaller=0, sensors_front=3, sensor_back=2, sensor_right=1, sensor_left=4
+	if (greater == 0){
+		if (*sensor <= distance){
+			*current_status += 1;
+		} else{
+			*current_status = 0;
+		}
+		if (*current_status >= count){
+			*current_status = 0;
+			return 1;
+		}
+	} else if (greater == 1){
+		//TODO
+	}
+	return 0;
+}
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
