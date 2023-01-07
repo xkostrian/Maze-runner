@@ -19,7 +19,7 @@ void PCR_stand_still(){
 
 void PCR_go_forward(){
 
-	random_number = rand() % 3 + 1;
+	random_number = 1;//rand() % 3 + 1;
 	switch (random_number){
 	case 1:
 		VL = 1600;
