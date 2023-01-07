@@ -29,7 +29,7 @@
 int k = 0, before = 0, state = 0;
 int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
 float d1=1000, d2=1000, d3=1000, d4=1000;
-int pomocna_premenna = 0, p1 = 0, p3 = 0, p4=0, p5=0;
+int pomocna_premenna = 0, p1 = 0, p2 = 0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -134,10 +134,21 @@ int main(void)
 			   HAL_Delay(60);
 			   d1 = HCSR04_Read1();
 			   if (validate(20, &d1, &i1, 5) == 1){
-				   PCR_left_arc(0);
-				   HAL_Delay(2000);
-				   PCR_go_forward();
-				   i1 = 0; i3 = 0; p1 = 0;
+				   PCR_stand_still();
+				   HAL_Delay(60);
+				   d4 = HCSR04_Read4();
+				   if (validate(20, &d4, &i4, 5) == 1){
+					   PCR_stand_still();
+					   i1 = 0; i3 = 0; p1 = 0; p2 = 0;
+				   } else{
+					   p2 += 1;
+				   }
+				   if (p2 >= 5){
+					   PCR_left_arc(0);
+					   HAL_Delay(2000);
+					   PCR_go_forward();
+					   i1 = 0; i3 = 0; p1 = 0; p2 = 0;
+				   }
 			   } else{
 				   p1 += 1;
 			   }
@@ -145,7 +156,7 @@ int main(void)
 				   PCR_right_arc(0);
 				   HAL_Delay(2000);
 				   PCR_go_forward();
-				   i1 = 0; i3 = 0; p1 = 0;
+				   i1 = 0; i3 = 0; p1 = 0; p2 = 0;
 			   }
 		   }
 		   HAL_Delay(60);
