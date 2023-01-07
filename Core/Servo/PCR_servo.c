@@ -6,6 +6,10 @@
  */
 
 #include "PCR_servo.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+int random_number = 0;
 
 void PCR_stand_still(){
 
@@ -15,8 +19,26 @@ void PCR_stand_still(){
 
 void PCR_go_forward(){
 
-	VL = 1600;
-	VR = 1400;
+	random_number = rand() % 3 + 1;
+	switch (random_number){
+	case 1:
+		VL = 1600;
+		VR = 1400;
+		break;
+	case 2:
+		VL = 1600;
+		VR = 1460;
+		break;
+	case 3:
+		VL = 1540;
+		VR = 1400;
+		break;
+	default:
+		VL = 1600;
+		VR = 1400;
+		break;
+	}
+
 }
 
 void PCR_set_speeds(int left, int right){
