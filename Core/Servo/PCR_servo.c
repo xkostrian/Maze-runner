@@ -19,6 +19,12 @@ void PCR_go_forward(){
 	VR = 1400;
 }
 
+void PCR_go_backwards(){
+
+	VL = 1400;
+	VR = 1600;
+}
+
 void PCR_set_speeds(int left, int right){
 
 	if(left < -100){
