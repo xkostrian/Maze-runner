@@ -17,6 +17,7 @@
 
 void PCR_stand_still();
 void PCR_go_forward();
+void PCR_go_backwards();
 void PCR_set_speeds(int left, int right);
 
 void PCR_left_arc(int mode);
