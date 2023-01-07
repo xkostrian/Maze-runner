@@ -29,7 +29,7 @@
 int k = 0, before = 0, state = 0;
 int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
 float d1=1000, d2=1000, d3=1000, d4=1000;
-int pomocna_premenna = 0, p2 = 0, p3 = 0;
+int pomocna_premenna = 0, p1 = 0, p3 = 0, p4=0, p5=0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -57,7 +57,7 @@ int pomocna_premenna = 0, p2 = 0, p3 = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-int validate(int distance, int sensor, int count);
+int validate(int distance, float *sensor, int *current_status, int count);
 EDGE_TYPE edgeDetect(uint8_t pin_state, uint8_t samples);
 /* USER CODE BEGIN PFP */
 
@@ -129,34 +129,24 @@ int main(void)
 	   if (state == 1){
 		   d3 = HCSR04_Read3();
 
-		   if (d3 <= 15.0){
-			   pomocna_premenna += 1;
-		   } else{
-			   pomocna_premenna = 0;
-		   }
-
-		   if (pomocna_premenna >= 5){
+		   if (validate(20, &d3, &i3, 5) == 1){
 			   PCR_stand_still();
 			   HAL_Delay(60);
 			   d1 = HCSR04_Read1();
-			   if (d1 <= 15.0){
-				   p2 += 1;
-			   } else{
-				   p2 = 0;
-			   }
-			   p3 += 1;
-			   if (p2 >= 4){
+			   if (validate(20, &d1, &i1, 5) == 1){
 				   PCR_left_arc(0);
 				   HAL_Delay(2000);
 				   PCR_go_forward();
-				   pomocna_premenna =0; p2 =0; p3=0;
-			   } else if (p3 >= 5){
+				   i1 = 0; i3 = 0; p1 = 0;
+			   } else{
+				   p1 += 1;
+			   }
+			   if (p1 >= 5){
 				   PCR_right_arc(0);
 				   HAL_Delay(2000);
 				   PCR_go_forward();
-				   pomocna_premenna =0; p2 =0; p3=0;
+				   i1 = 0; i3 = 0; p1 = 0;
 			   }
-			   HAL_Delay(60);
 		   }
 		   HAL_Delay(60);
 	   }
@@ -169,34 +159,15 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
-int validate(int distance, int sensor, int count){ //sensors_front=3, sensor_back=2, sensor_right=1, sensor_left=4
-	float d = 0;
-	int c = 0;
-	for (int i=0; i<=count+1; i++){
-		switch(sensor){
-		case 1:
-			d = HCSR04_Read1();
-			HAL_Delay(60);
-			break;
-		case 2:
-			d = HCSR04_Read2();
-			HAL_Delay(60);
-			break;
-		case 3:
-			d = HCSR04_Read3();
-			HAL_Delay(60);
-			break;
-		case 4:
-			d = HCSR04_Read4();
-			HAL_Delay(60);
-			break;
-		}
-		if (d <= (float)distance){
-			c += 1;
-		}
-		if (c == count){
-			return 1;
-		}
+int validate(int distance, float *sensor, int *current_status, int count){ //sensors_front=3, sensor_back=2, sensor_right=1, sensor_left=4
+	if (*sensor <= distance){
+		*current_status += 1;
+	} else{
+		*current_status = 0;
+	}
+	if (*current_status >= count-1){
+//		*current_status = 0;
+		return 1;
 	}
 	return 0;
 }
