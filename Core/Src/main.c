@@ -29,7 +29,7 @@
 int k = 0, before = 0, state = 0;
 int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
 float d1=1000, d2=1000, d3=1000, d4=1000;
-int pomocna_premenna = 0, p1 = 0, p2 = 0;
+int p1 = 0, p2 = 0, p3 = 0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -129,17 +129,32 @@ int main(void)
 	   if (state == 1){
 		   d3 = HCSR04_Read3();
 
-		   if (validate(20, &d3, &i3, 5) == 1){
+		   if (validate(20, &d3, &i3, 5) == 1){ //front
 			   PCR_stand_still();
 			   HAL_Delay(60);
 			   d1 = HCSR04_Read1();
-			   if (validate(20, &d1, &i1, 5) == 1){
+			   if (validate(20, &d1, &i1, 5) == 1){ //right
 				   PCR_stand_still();
 				   HAL_Delay(60);
 				   d4 = HCSR04_Read4();
-				   if (validate(20, &d4, &i4, 5) == 1){
+				   if (validate(20, &d4, &i4, 5) == 1){ //left
 					   PCR_stand_still();
-					   i1 = 0; i3 = 0; p1 = 0; p2 = 0;
+					   HAL_Delay(60);
+					   d2 = HCSR04_Read2();
+					   if (validate(20, &d2, &i2, 5) == 1){ //back
+						   PCR_stand_still();
+						   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
+					   } else{
+						   p3 += 1;
+					   }
+					   if (p3 >= 5){
+						   PCR_go_backwards();
+						   HAL_Delay(2000);
+						   PCR_right_arc(0);
+						   HAL_Delay(2000);
+						   PCR_go_forward();
+						   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
+					   } //back end
 				   } else{
 					   p2 += 1;
 				   }
@@ -147,8 +162,8 @@ int main(void)
 					   PCR_left_arc(0);
 					   HAL_Delay(2000);
 					   PCR_go_forward();
-					   i1 = 0; i3 = 0; p1 = 0; p2 = 0;
-				   }
+					   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
+				   } //left end
 			   } else{
 				   p1 += 1;
 			   }
@@ -156,9 +171,9 @@ int main(void)
 				   PCR_right_arc(0);
 				   HAL_Delay(2000);
 				   PCR_go_forward();
-				   i1 = 0; i3 = 0; p1 = 0; p2 = 0;
-			   }
-		   }
+				   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
+			   } //right end
+		   } //front end
 		   HAL_Delay(60);
 	   }
 
