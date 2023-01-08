@@ -160,8 +160,6 @@ int main(void)
 					   d2 = HCSR04_Read2();
 					   if (validate(20, &d2, &i2, 5) == 1){ //back
 						   PCR_stand_still();
-						   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
-						   continue;
 					   } else{
 						   p3 += 1;
 					   }
@@ -172,7 +170,6 @@ int main(void)
 						   HAL_Delay(2000);
 						   PCR_go_forward();
 						   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
-						   continue;
 					   } //back end
 				   } else{
 					   p2 += 1;
@@ -182,7 +179,6 @@ int main(void)
 					   HAL_Delay(2000);
 					   PCR_go_forward();
 					   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
-					   continue;
 				   } //left end
 			   } else{
 				   p1 += 1;
@@ -192,25 +188,24 @@ int main(void)
 				   HAL_Delay(2000);
 				   PCR_go_forward();
 				   i1 = 0; i3 = 0; p1 = 0; p2 = 0; p3 = 0; i2 = 0; i4 = 0;
-				   continue;
 			   } //right end
 		   } //front end
 		   jp1 = p1;
 		   HAL_Delay(60);
 
-//		   if (p1 < 1 && p2 <1 && p3 < 1){
-//			   d1 = HCSR04_Read1();
-//			   if (validate(10, &d1, &i1, 2) == 1){ //right II
-//				   PCR_left_arc(3);
-//			   }
-//			   HAL_Delay(60);
-//
-//			   d4 = HCSR04_Read4();
-//			   if (validate(10, &d4, &i4, 2) == 1){ //left II
-//				   PCR_right_arc(3);
-//			   }
-//			   HAL_Delay(60);
-//		   }
+		   if (i3 == 0){
+			   d1 = HCSR04_Read1();
+			   if (validate(10, &d1, &i1, 2) == 1){ //right II
+				   PCR_left_arc(1);
+			   }
+			   HAL_Delay(60);
+
+			   d4 = HCSR04_Read4();
+			   if (validate(10, &d4, &i4, 2) == 1){ //left II
+				   PCR_right_arc(1);
+			   }
+			   HAL_Delay(60);
+		   }
 	   }
 
   }
